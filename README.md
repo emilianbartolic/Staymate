@@ -17,7 +17,7 @@ pip install -r requirements.txt
 uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
-Open <http://127.0.0.1:8000>. StayMate starts `codex exec` for each guest question. The Codex login stays on the user's computer and is never committed to GitHub. Do not run another server on port 8000; the backend serves both the page and the chat API.
+Open <http://127.0.0.1:8000>. StayMate starts `codex exec` for each guest question. The Codex login stays on the user's computer and is never committed to GitHub. Do not run another server on port 8000; the backend serves both the page and the chat API. The API rejects non-local clients and applies a per-IP request limit. Keep the server bound to `127.0.0.1`.
 
 Die drei Beispielbilder liegen in `assets/properties/`; Fotografen, Quellseiten und Bildtitel stehen in `assets/properties/ATTRIBUTION.md`. Sie sind illustrative Beispielbilder und zeigen nicht die konkreten Demo-Unterkünfte.
 
@@ -34,11 +34,11 @@ export OPENAI_API_KEY="dein-schluessel"
 uvicorn app:app --reload
 ```
 
-Then open <http://127.0.0.1:8000>. Never commit API keys or `.env` files.
+Then open <http://127.0.0.1:8000>. Never commit API keys or `.env` files. Uploaded photos are sent to the configured model for analysis. Do not upload private or sensitive images.
 
 ### Important: GitHub Pages and the personal Codex login
 
-GitHub Pages can host the static files, but a page opened there cannot run a visitor's local Codex CLI. To use each person's own Codex login, each person must clone this repo and run the local backend as described above. This repository is designed for that local self-hosted workflow.
+GitHub Pages can host the static files, but a page opened there cannot run a visitor's local Codex CLI. To use each person's own Codex login, each person must clone this repo and run the local backend as described above. This repository is designed for that local self-hosted workflow. It is not configured for public production hosting: there is no host account system, durable ticket storage, or secure remote deployment. Escalations are only noted in the current browser and are not sent to a host. Do not bind the API to `0.0.0.0` or expose it to the internet.
 
 ### Features
 
