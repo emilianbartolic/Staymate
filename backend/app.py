@@ -1,12 +1,17 @@
 """StayMate AI backend: policy/routing first, LLM phrasing second."""
 import json
+import base64
 import os
 import subprocess
 import tempfile
+import time
+import threading
 from pathlib import Path
 from typing import Literal, Optional
+from collections import defaultdict, deque
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, File, Form, UploadFile, Request
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -20,9 +25,55 @@ app = FastAPI(title="StayMate AI API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],
-    allow_methods=["POST"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
+
+# Small in-process limit for the intended single-user local installation.
+_request_times: dict[str, deque] = defaultdict(deque)
+_rate_lock = threading.Lock()
+MAX_BODY_BYTES = 9 * 1024 * 1024
+MAX_IMAGE_BYTES = 8 * 1024 * 1024
+RATE_LIMIT = 20
+RATE_WINDOW_SECONDS = 60
+
+
+@app.middleware("http")
+async def local_api_guard(request: Request, call_next):
+    if request.url.path.startswith("/api/"):
+        # This demo intentionally exposes its API only to the same machine.
+        # A public deployment needs a real authenticated gateway and persistent
+        # host workflow; opening this API with a flag would be unsafe.
+        peer = request.client.host if request.client else ""
+        if peer not in {"127.0.0.1", "::1", "localhost", "testclient"}:
+            return JSONResponse({"detail": "StayMate API ist nur lokal erreichbar."}, status_code=403)
+        origin = request.headers.get("origin")
+        allowed_origins = {"http://localhost:8000", "http://127.0.0.1:8000"}
+        if request.method == "POST" and origin and origin not in allowed_origins:
+            return JSONResponse({"detail": "Ungültiger Anfrageursprung."}, status_code=403)
+        length = request.headers.get("content-length")
+        if length:
+            try:
+                if int(length) > MAX_BODY_BYTES:
+                    return JSONResponse({"detail": "Anfrage zu groß."}, status_code=413)
+            except ValueError:
+                return JSONResponse({"detail": "Ungültige Content-Length."}, status_code=400)
+        host = request.client.host if request.client else "unknown"
+        now = time.monotonic()
+        with _rate_lock:
+            hits = _request_times[host]
+            while hits and now - hits[0] > RATE_WINDOW_SECONDS:
+                hits.popleft()
+            if len(hits) >= RATE_LIMIT:
+                return JSONResponse({"detail": "Zu viele Anfragen. Bitte kurz warten."}, status_code=429)
+            hits.append(now)
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    response.headers["Cache-Control"] = "no-store" if request.url.path.startswith("/api/") else "no-cache"
+    return response
 
 BASE_DIR = Path(__file__).resolve().parent
 PROPERTIES = json.loads((BASE_DIR / "properties.json").read_text(encoding="utf-8"))
@@ -142,15 +193,15 @@ def find_facts(question: str, property_data: dict) -> list[dict]:
 
 def escalation_reply(question: str) -> str:
     localized = {
-        "en": "I can’t confirm that automatically. I’ve forwarded your request to the host for review.",
-        "fr": "Je ne peux pas le confirmer automatiquement. J’ai transmis votre demande à l’hôte, qui pourra vous répondre.",
-        "es": "No puedo confirmarlo automáticamente. He enviado tu solicitud al anfitrión para que la revise.",
-        "it": "Non posso confermarlo automaticamente. Ho inoltrato la richiesta all’host, che potrà verificarla.",
-        "nl": "Ik kan dit niet automatisch bevestigen. Ik heb je verzoek doorgestuurd naar de host.",
+        "en": "I can’t confirm that automatically. Please contact the host to review your request; this demo does not send it to them.",
+        "fr": "Je ne peux pas le confirmer automatiquement. Contactez l’hôte pour vérifier votre demande ; cette démo ne la lui transmet pas.",
+        "es": "No puedo confirmarlo automáticamente. Contacta con el anfitrión; esta demo no le envía la solicitud.",
+        "it": "Non posso confermarlo automaticamente. Contatta l’host; questa demo non gli invia la richiesta.",
+        "nl": "Ik kan dit niet automatisch bevestigen. Neem contact op met de host; deze demo stuurt het verzoek niet door.",
     }
     if language(question) != "de":
         return localized.get(language(question), localized["en"])
-    return "Das kann ich nicht automatisch verbindlich zusagen. Ich habe deine Anfrage zur Prüfung an den Gastgeber weitergeleitet."
+    return "Das kann ich nicht automatisch verbindlich zusagen. Bitte wende dich zur Prüfung direkt an den Gastgeber; diese Demo sendet keine Nachricht an ihn."
 
 
 def fallback_reply(question: str, matches: list[dict]) -> str:
@@ -161,6 +212,23 @@ def fallback_reply(question: str, matches: list[dict]) -> str:
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(question: str = Form(..., min_length=1, max_length=800), property_id: str = Form("design-maisonette", min_length=1, max_length=80), image: Optional[UploadFile] = File(None)) -> ChatResponse:
     question = question.strip()
+    if not question and image is None:
+        raise HTTPException(status_code=400, detail="Frage oder Bild erforderlich.")
+    image_content = None
+    image_suffix = None
+    if image is not None:
+        image_content = await image.read(MAX_IMAGE_BYTES + 1)
+        if len(image_content) > MAX_IMAGE_BYTES:
+            raise HTTPException(status_code=413, detail="Bild ist größer als 8 MB.")
+        signatures = {
+            ".jpg": image_content.startswith(b"\xff\xd8\xff"),
+            ".jpeg": image_content.startswith(b"\xff\xd8\xff"),
+            ".png": image_content.startswith(b"\x89PNG\r\n\x1a\n"),
+            ".webp": len(image_content) >= 12 and image_content[:4] == b"RIFF" and image_content[8:12] == b"WEBP",
+        }
+        image_suffix = Path(image.filename or "").suffix.lower()
+        if image_suffix not in signatures or not signatures[image_suffix]:
+            raise HTTPException(status_code=415, detail="Dateiendung und Bildinhalt passen nicht zusammen. Erlaubt sind JPG, PNG und WebP.")
     property_data = PROPERTIES_BY_ID.get(property_id)
     if property_data is None:
         return ChatResponse(answer="Diese Unterkunft ist nicht bekannt. Bitte wähle eine gültige Unterkunft aus.", decision="escalate", sources=[], model_used=False)
@@ -177,15 +245,9 @@ async def chat(question: str = Form(..., min_length=1, max_length=800), property
     client = create_model_client()
     if client is None:
         image_path = None
-        if image is not None:
-            content = await image.read()
-            if len(content) > 8 * 1024 * 1024:
-                return ChatResponse(answer="Das Bild ist zu groß. Bitte lade ein Bild unter 8 MB hoch.", decision="answer", sources=[], model_used=False)
-            suffix = Path(image.filename or "photo.jpg").suffix.lower()
-            if suffix not in {".jpg", ".jpeg", ".png", ".webp"}:
-                return ChatResponse(answer="Bitte lade ein JPG-, PNG- oder WebP-Bild hoch.", decision="answer", sources=[], model_used=False)
-            with tempfile.NamedTemporaryFile(prefix="staymate-image-", suffix=suffix, delete=False) as uploaded:
-                uploaded.write(content)
+        if image_content is not None:
+            with tempfile.NamedTemporaryFile(prefix="staymate-image-", suffix=image_suffix, delete=False) as uploaded:
+                uploaded.write(image_content)
                 image_path = uploaded.name
         local_answer = codex_local_answer(question, verified_context, image_path)
         if image_path:
@@ -199,10 +261,17 @@ async def chat(question: str = Form(..., min_length=1, max_length=800), property
             return ChatResponse(answer=escalation_reply(question), decision="escalate", sources=[], model_used=False)
         return ChatResponse(answer=fallback_reply(question, matches), decision="answer", sources=sources, model_used=False)
     try:
+        model_input = question
+        if image_content is not None:
+            mime_type = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}[image_suffix]
+            model_input = [{"role": "user", "content": [
+                {"type": "input_text", "text": question or "Bitte beschreibe dieses Bild im Zusammenhang mit der Unterkunft."},
+                {"type": "input_image", "image_url": f"data:{mime_type};base64,{base64.b64encode(image_content).decode('ascii')}"},
+            ]}]
         response = client.responses.create(
             model=os.environ.get("STAYMATE_MODEL") or os.environ.get("CODEX_MODEL") or "gpt-5",
             instructions=SYSTEM_PROMPT + "\nVerified facts:\n" + verified_context,
-            input=question,
+            input=model_input,
         )
         answer = response.output_text.strip()
         if answer:
