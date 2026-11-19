@@ -1,6 +1,7 @@
 """StayMate AI backend: policy/routing first, LLM phrasing second."""
 import json
 import base64
+import io
 import os
 import subprocess
 import tempfile
@@ -10,11 +11,12 @@ from pathlib import Path
 from typing import Literal, Optional
 from collections import defaultdict, deque
 
-from fastapi import FastAPI, File, Form, UploadFile, Request
+from fastapi import FastAPI, File, Form, UploadFile, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from PIL import Image, UnidentifiedImageError
 
 try:
     from openai import OpenAI
@@ -34,6 +36,7 @@ _request_times: dict[str, deque] = defaultdict(deque)
 _rate_lock = threading.Lock()
 MAX_BODY_BYTES = 9 * 1024 * 1024
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
+Image.MAX_IMAGE_PIXELS = 24_000_000
 RATE_LIMIT = 20
 RATE_WINDOW_SECONDS = 60
 
@@ -229,6 +232,16 @@ async def chat(question: str = Form(..., min_length=1, max_length=800), property
         image_suffix = Path(image.filename or "").suffix.lower()
         if image_suffix not in signatures or not signatures[image_suffix]:
             raise HTTPException(status_code=415, detail="Dateiendung und Bildinhalt passen nicht zusammen. Erlaubt sind JPG, PNG und WebP.")
+        try:
+            with Image.open(io.BytesIO(image_content)) as decoded_image:
+                expected_format = {".jpg": "JPEG", ".jpeg": "JPEG", ".png": "PNG", ".webp": "WEBP"}[image_suffix]
+                if decoded_image.format != expected_format:
+                    raise HTTPException(status_code=415, detail="Bildformat konnte nicht bestätigt werden.")
+                if decoded_image.width * decoded_image.height > Image.MAX_IMAGE_PIXELS:
+                    raise HTTPException(status_code=413, detail="Bildauflösung ist zu groß.")
+                decoded_image.verify()
+        except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
+            raise HTTPException(status_code=415, detail="Die Bilddatei ist beschädigt oder ungültig.") from None
     property_data = PROPERTIES_BY_ID.get(property_id)
     if property_data is None:
         return ChatResponse(answer="Diese Unterkunft ist nicht bekannt. Bitte wähle eine gültige Unterkunft aus.", decision="escalate", sources=[], model_used=False)
