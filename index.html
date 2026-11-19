@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StayMate AI · Guest Assistant</title>
+    <link rel="stylesheet" href="styles.css?v=hard-layout-3" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <p class="eyebrow">UNIVERSITY PROJECT · MVP</p>
+        <div class="brand-lockup"><img src="assets/staymate-logo.png" alt="StayMate AI Logo" /><h1>StayMate <span>AI</span></h1></div>
+        <p class="subtitle">Guest Assistant für Ferienwohnungen</p>
+        <section class="property-card">
+          <span class="status-dot"></span><span id="property-status">Unterkünfte aktiv</span>
+          <label class="sr-only" for="property-select">Unterkunft auswählen</label>
+          <select id="property-select" aria-label="Unterkunft auswählen"></select>
+          <p id="property-meta">Unterkunft wird geladen …</p>
+          <dl>
+            <div><dt>Check-in</dt><dd id="checkin-time">—</dd></div>
+            <div><dt>Check-out</dt><dd id="checkout-time">—</dd></div>
+          </dl>
+          <figure class="property-visual">
+            <img id="property-photo" src="assets/properties/design-maisonette.jpg" alt="Modernes Maisonette-Interieur mit Wendeltreppe und offener Küche" />
+            <figcaption><strong id="property-caption">Maisonette mit zwei Ebenen</strong><span id="photo-disclaimer">Beispielbild, nicht das konkrete Mietobjekt</span><a id="photo-credit" href="https://unsplash.com/photos/a-living-room-filled-with-furniture-and-a-spiral-staircase-5ESQy7RsjWE" target="_blank" rel="noreferrer">Foto: Alex Tyson / Unsplash</a></figcaption>
+          </figure>
+        </section>
+        <button id="dashboard-toggle" class="dashboard-toggle" type="button">Host-Dashboard <span id="ticket-count">0</span></button>
+      </aside>
+
+      <section class="chat-panel">
+        <header>
+          <div>
+            <p class="eyebrow">GÄSTE-CHAT</p>
+            <h2>Wie kann ich helfen?</h2>
+          </div>
+          <button id="reset" class="quiet-button" type="button">Chat zurücksetzen</button>
+        </header>
+
+        <div id="messages" class="messages" aria-live="polite">
+          <article class="message agent">
+            <div class="avatar">S</div>
+            <div class="bubble">
+              <p>Hallo! Ich bin StayMate. Ich beantworte Fragen zur Unterkunft und leite besondere Anliegen an den Gastgeber weiter.</p>
+              <small>Nur geprüfte Unterkunftsinformationen</small>
+            </div>
+          </article>
+        </div>
+
+        <section class="suggestions" aria-label="Beispielfragen">
+          <button type="button">Gibt es Parkplätze?</button>
+          <button type="button">Can I work from the apartment?</button>
+          <button type="button">Kann ich früher einchecken?</button>
+          <button type="button">Gibt es eine Treppe?</button>
+        </section>
+
+        <form id="chat-form" class="composer" enctype="multipart/form-data">
+          <label class="upload-button" for="image-upload" title="Foto anhängen" aria-label="Foto anhängen">＋<input id="image-upload" type="file" accept="image/jpeg,image/png,image/webp" hidden /></label>
+          <label class="sr-only" for="question">Frage an StayMate</label>
+          <input id="question" autocomplete="off" placeholder="Stelle eine Frage zur Unterkunft …" required />
+          <button type="submit">Senden <span>↗</span></button>
+        </form>
+        <p id="image-selection" class="image-selection" aria-live="polite"></p>
+        <p class="privacy-note">Demo ohne echte Gästedaten · kritische Anliegen werden nicht automatisch entschieden.</p>
+      </section>
+
+      <aside class="inspector" aria-label="Host-Informationen">
+        <p class="eyebrow">TRANSPARENZ</p>
+        <h2>Agentenstatus</h2>
+        <div id="decision" class="decision safe">
+          <span class="decision-icon">✓</span>
+          <div><strong>Bereit</strong><p>Stelle eine Frage, um das Routing zu sehen.</p></div>
+        </div>
+        <section>
+          <h3>Wissensbasis</h3>
+          <ul id="sources"><li>Unterkunftsprofil geladen</li></ul>
+        </section>
+        <section>
+          <h3>Eskalieren bei</h3>
+          <p class="tags"><span>Storno</span><span>Preis</span><span>Schaden</span><span>Sicherheit</span></p>
+        </section>
+      </aside>
+    </main>
+    <div id="dashboard" class="dashboard" aria-hidden="true">
+      <section class="dashboard-card" aria-label="Host-Dashboard">
+        <header class="dashboard-header">
+          <div><p class="eyebrow">HOST-DASHBOARD</p><h2>Offene Anfragen</h2></div>
+          <button id="dashboard-close" class="quiet-button" type="button">Schließen ×</button>
+        </header>
+        <div class="metrics">
+          <div><strong id="open-count">0</strong><span>offen</span></div>
+          <div><strong>100 %</strong><span>faktenbasiert</span></div>
+          <div><strong id="answered-count">0</strong><span>bearbeitet</span></div>
+        </div>
+        <section class="advisor-card">
+          <div><p class="eyebrow">HOST ADVISOR</p><h3 id="advisor-title">Noch keine Muster erkannt</h3><p id="advisor-text">Der Agent fasst wiederkehrende Anliegen zusammen, damit du die Wissensbasis verbessern kannst.</p></div>
+          <span>✦</span>
+        </section>
+        <div id="tickets" class="tickets">
+          <div class="empty-state"><span>✓</span><h3>Keine offenen Anfragen</h3><p>Eskalierte Fragen von Gästen erscheinen hier automatisch.</p></div>
+        </div>
+      </section>
+    </div>
+    <script src="app.js?v=multi-property"></script>
+  </body>
+</html>

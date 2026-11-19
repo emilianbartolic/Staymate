@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "description": "Allgemeine Intent- und Sicherheitswissensbasis für StayMate. Konkrete Werte kommen aus properties.json.",
+  "safe_intents": [
+    {"id":"checkin","label":"Check-in","example_questions":["Ab wann kann ich einchecken?","Wie funktioniert die Schlüsselübergabe?","How do I check in?"],"data_source":"property.facts.checkin","answer_rule":"Nur die Check-in-Zeit und den hinterlegten Zugang erklären."},
+    {"id":"checkout","label":"Check-out","example_questions":["Wann muss ich auschecken?","Wo gebe ich den Schlüssel ab?","What time is check-out?"],"data_source":"property.facts.checkout","answer_rule":"Nur die hinterlegte Check-out-Zeit und Anweisung erklären."},
+    {"id":"parking","label":"Parken","example_questions":["Gibt es einen Parkplatz?","Wo kann ich mein Auto abstellen?","Is parking available?"],"data_source":"property.facts.parking","answer_rule":"Nur die objektbezogenen Parkinformationen nennen."},
+    {"id":"internet","label":"WLAN und Arbeiten","example_questions":["Gibt es WLAN?","Kann ich dort arbeiten?","What is the Wi-Fi like?"],"data_source":"property.facts.work","answer_rule":"Nur WLAN- und Arbeitsplatzinformationen aus dem Objektprofil nennen; niemals Passwörter erfinden."},
+    {"id":"capacity","label":"Kapazität und Schlafplätze","example_questions":["Wie viele Personen können dort schlafen?","Wie viele Betten gibt es?","How many guests can stay?"],"data_source":"property.facts.guests","answer_rule":"Nur die hinterlegte Kapazität und Schlafsituation nennen."},
+    {"id":"accessibility","label":"Zugang und Barrierefreiheit","example_questions":["Ist die Unterkunft barrierefrei?","Gibt es Treppen?","Is the apartment accessible?"],"data_source":"property.facts.accessibility_or_stairs","answer_rule":"Nur dokumentierte Hinweise zu Treppen, Ebenen und Zugang nennen; keine Barrierefreiheitszusage ableiten."},
+    {"id":"location","label":"Lage und Anreise","example_questions":["Wie komme ich zur Unterkunft?","Wo liegt sie?","Is public transport nearby?"],"data_source":"property.facts.location","answer_rule":"Nur die hinterlegte Lage- und Verkehrsinformation verwenden."},
+    {"id":"amenities","label":"Ausstattung","example_questions":["Gibt es eine Küche?","Gibt es eine Waschmaschine?","Is there a TV?"],"data_source":"property.facts.amenities","answer_rule":"Nur bestätigte Ausstattungsmerkmale nennen."}
+  ],
+  "host_confirmation_intents": [
+    {"id":"early_checkin","label":"Früher Check-in","terms":["früher","early","vor 15","vor 14","vor 16"],"example_questions":["Kann ich früher einchecken?","Is early check-in possible?"],"action":"Ticket mit Priorität normal erstellen; keine Zusage machen."},
+    {"id":"late_checkout","label":"Später Check-out","terms":["später","late","länger bleiben"],"example_questions":["Kann ich später auschecken?","Can I check out late?"],"action":"Ticket mit Priorität normal erstellen; keine Zusage machen."},
+    {"id":"availability","label":"Verfügbarkeit und Buchung","terms":["verfügbar","available","buchung","booking","reservieren","reservation"],"example_questions":["Ist die Unterkunft nächste Woche frei?","Can I book these dates?"],"action":"Verfügbarkeit nicht behaupten; an Gastgeber oder Buchungssystem übergeben."},
+    {"id":"price","label":"Preis und Rabatt","terms":["preis","price","rabatt","discount","günstiger","cheaper","kosten"],"example_questions":["Gibt es einen Rabatt?","Why is the price different?"],"action":"Keine Preiszusage; an Gastgeber oder Buchungssystem übergeben."},
+    {"id":"cancellation","label":"Stornierung und Rückerstattung","terms":["storn","cancel","refund","erstatt","rückzahlung"],"example_questions":["Kann ich kostenlos stornieren?","Can I get a refund?"],"action":"Nicht selbst interpretieren; auf die Buchungsbedingungen verweisen und Host/Airbnb-Prozess nutzen."},
+    {"id":"pets","label":"Haustiere und Sonderwünsche","terms":["haustier","pet","hund","katze","baby","kind","extra bed"],"example_questions":["Sind Hunde erlaubt?","Can I bring a pet?"],"action":"Keine Erlaubnis erfinden; Host-Entscheidung anfordern."},
+    {"id":"maintenance","label":"Schaden und Wartung","terms":["schaden","kaputt","defekt","broken","damage","funktioniert nicht","leak"],"example_questions":["Die Heizung funktioniert nicht.","Something is broken."],"action":"Dringlichkeit erkennen, Ticket erstellen und bei akuter Gefahr sofort eskalieren."},
+    {"id":"safety","label":"Sicherheit und Notfall","terms":["notfall","emergency","sicher","unsafe","feuer","gas","polizei","arzt"],"example_questions":["Ich fühle mich unsicher.","There is a gas smell."],"action":"Keine Diagnose oder Sicherheitszusage; bei unmittelbarer Gefahr an lokale Notdienste verweisen und Host alarmieren."},
+    {"id":"complaint","label":"Beschwerde und Konflikt","terms":["beschwer","complaint","laut","noise","unzufrieden","angry"],"example_questions":["Die Nachbarn sind sehr laut.","I am unhappy with the stay."],"action":"Empathisch antworten, Problem zusammenfassen und Host-Ticket mit Priorität erstellen."}
+  ],
+  "response_principles": [
+    "In der Sprache des Gasts antworten.",
+    "Nur bestätigte Fakten aus der ausgewählten Unterkunft verwenden.",
+    "Keine Passwörter, Preise, Verfügbarkeiten oder Zusagen erfinden.",
+    "Bei Unsicherheit transparent sein und an den Host eskalieren.",
+    "Technische Fakten und soziale Empathie in einer Antwort verbinden, wenn beides nötig ist."
+  ]
+}

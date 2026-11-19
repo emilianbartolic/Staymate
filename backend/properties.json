@@ -1,0 +1,48 @@
+[
+  {
+    "id": "design-maisonette",
+    "name": "Design-Maisonette",
+    "location": "Gärtringen · bis 4 Gäste",
+    "check_in": "ab 15:00 Uhr",
+    "check_out": "bis 11:00 Uhr",
+    "facts": [
+      {"id":"parking","terms":["park","auto","car","stellplatz"],"source":"Parkmöglichkeiten","answers":{"de":"Ja. Zur Unterkunft gehören zwei kostenlose Stellplätze im Freien.","en":"Yes. Two free outdoor parking spaces are included with the accommodation."}},
+      {"id":"checkin","terms":["check-in","check in","ankunft","arrive","arrival","schlüssel"],"source":"Check-in","answers":{"de":"Der reguläre Check-in ist ab 15:00 Uhr möglich. Er erfolgt flexibel per Self-Check-in über eine Schlüsselbox.","en":"Regular check-in is available from 3:00 PM via self check-in with a key box."}},
+      {"id":"checkout","terms":["check-out","check out","auscheck","abreise","leave"],"source":"Check-out","answers":{"de":"Der Check-out ist bis 11:00 Uhr vorgesehen.","en":"Check-out is scheduled by 11:00 AM."}},
+      {"id":"work","terms":["wlan","wi-fi","wifi","arbeiten","arbeit","work","desk","internet"],"source":"Ausstattung","answers":{"de":"Ja. Die Unterkunft bietet WLAN und einen speziellen Arbeitsplatz.","en":"Yes. The apartment has Wi-Fi and a dedicated workspace."}},
+      {"id":"stairs","terms":["treppe","stairs","barriere","stock","floor","mobil"],"source":"Unterkunftsbeschreibung","answers":{"de":"Die Wohnung erstreckt sich über zwei Ebenen; Schlafzimmer und Bad sind über eine Wendeltreppe erreichbar.","en":"The apartment spans two levels; the bedroom and bathroom are reached via a spiral staircase."}},
+      {"id":"guests","terms":["gäste","personen","person","people","sleep","bett","bed"],"source":"Unterkunftsprofil","answers":{"de":"Die Unterkunft ist für bis zu vier Gäste ausgelegt.","en":"The apartment accommodates up to four guests."}},
+      {"id":"location","terms":["lage","wo","bahnhof","stuttgart","s-bahn","location","train"],"source":"Lage","answers":{"de":"Die Unterkunft liegt in Gärtringen mit guter Anbindung an Stuttgart und die Region.","en":"The apartment is in Gärtringen with good connections to Stuttgart and the surrounding region."}}
+    ]
+  },
+  {
+    "id": "city-loft",
+    "name": "City Loft",
+    "location": "Stuttgart-Mitte · bis 2 Gäste",
+    "check_in": "ab 16:00 Uhr",
+    "check_out": "bis 10:00 Uhr",
+    "facts": [
+      {"id":"parking","terms":["park","auto","car","stellplatz"],"source":"Parkmöglichkeiten","answers":{"de":"Für das City Loft gibt es keinen eigenen Stellplatz. Ein öffentliches Parkhaus ist zwei Gehminuten entfernt.","en":"The City Loft has no private parking. A public parking garage is a two-minute walk away."}},
+      {"id":"checkin","terms":["check-in","check in","ankunft","arrive","arrival","schlüssel"],"source":"Check-in","answers":{"de":"Der Check-in ist ab 16:00 Uhr per digitalem Türcode möglich.","en":"Check-in is available from 4:00 PM with a digital door code."}},
+      {"id":"checkout","terms":["check-out","check out","auscheck","abreise","leave"],"source":"Check-out","answers":{"de":"Der Check-out ist bis 10:00 Uhr vorgesehen.","en":"Check-out is scheduled by 10:00 AM."}},
+      {"id":"work","terms":["wlan","wi-fi","wifi","arbeiten","arbeit","work","desk","internet"],"source":"Ausstattung","answers":{"de":"Das Loft bietet schnelles WLAN, aber keinen separaten Arbeitsplatz.","en":"The loft has fast Wi-Fi but no dedicated workspace."}},
+      {"id":"guests","terms":["gäste","personen","person","people","sleep","bett","bed"],"source":"Unterkunftsprofil","answers":{"de":"Das City Loft ist für bis zu zwei Gäste mit einem Doppelbett ausgelegt.","en":"The City Loft accommodates up to two guests with one double bed."}},
+      {"id":"location","terms":["lage","wo","bahnhof","stuttgart","s-bahn","location","train"],"source":"Lage","answers":{"de":"Das Loft liegt zentral in Stuttgart-Mitte, fünf Minuten von der S-Bahn entfernt.","en":"The loft is centrally located in Stuttgart Mitte, five minutes from the S-Bahn."}}
+    ]
+  },
+  {
+    "id": "lake-house",
+    "name": "Haus am See",
+    "location": "Bodensee · bis 6 Gäste",
+    "check_in": "ab 14:00 Uhr",
+    "check_out": "bis 10:00 Uhr",
+    "facts": [
+      {"id":"parking","terms":["park","auto","car","stellplatz"],"source":"Parkmöglichkeiten","answers":{"de":"Am Haus stehen drei kostenlose Stellplätze zur Verfügung.","en":"Three free parking spaces are available at the house."}},
+      {"id":"checkin","terms":["check-in","check in","ankunft","arrive","arrival","schlüssel"],"source":"Check-in","answers":{"de":"Der Check-in ist ab 14:00 Uhr über einen Schlüsseltresor möglich.","en":"Check-in is available from 2:00 PM via a key safe."}},
+      {"id":"checkout","terms":["check-out","check out","auscheck","abreise","leave"],"source":"Check-out","answers":{"de":"Der Check-out ist bis 10:00 Uhr vorgesehen.","en":"Check-out is scheduled by 10:00 AM."}},
+      {"id":"work","terms":["wlan","wi-fi","wifi","arbeiten","arbeit","work","desk","internet"],"source":"Ausstattung","answers":{"de":"WLAN und ein heller Arbeitsplatz mit Blick auf den Garten sind vorhanden.","en":"Wi-Fi and a bright workspace overlooking the garden are available."}},
+      {"id":"guests","terms":["gäste","personen","person","people","sleep","bett","bed"],"source":"Unterkunftsprofil","answers":{"de":"Das Haus bietet Platz für bis zu sechs Gäste in drei Schlafzimmern.","en":"The house accommodates up to six guests in three bedrooms."}},
+      {"id":"location","terms":["lage","wo","bahnhof","stuttgart","s-bahn","location","train"],"source":"Lage","answers":{"de":"Das Haus liegt ruhig am Bodensee; der See ist in fünf Minuten zu Fuß erreichbar.","en":"The house is in a quiet area by Lake Constance; the lake is a five-minute walk away."}}
+    ]
+  }
+]

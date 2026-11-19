@@ -1,0 +1,15 @@
+{
+  "property_id": "lake-house",
+  "property_name": "Haus am See",
+  "facts": {
+    "checkin": "Check-in ab 14:00 Uhr über einen Schlüsseltresor.",
+    "checkout": "Check-out bis 10:00 Uhr.",
+    "parking": "Drei kostenlose Stellplätze am Haus.",
+    "internet": "WLAN und heller Arbeitsplatz mit Blick auf den Garten vorhanden.",
+    "capacity": "Bis zu sechs Gäste in drei Schlafzimmern.",
+    "accessibility": "Barrierefreiheit nicht bestätigt; Zugang bitte beim Host klären.",
+    "location": "Ruhige Lage am Bodensee; der See ist fünf Minuten zu Fuß entfernt.",
+    "amenities": "Küche, WLAN, Arbeitsplatz, Garten und kostenlose Stellplätze."
+  },
+  "host_confirmation": ["Early Check-in", "Late Check-out", "Preise", "Stornierung", "Haustiere", "Schäden", "Sicherheit"]
+}

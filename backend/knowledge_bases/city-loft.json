@@ -1,0 +1,15 @@
+{
+  "property_id": "city-loft",
+  "property_name": "City Loft",
+  "facts": {
+    "checkin": "Check-in ab 16:00 Uhr per digitalem Türcode.",
+    "checkout": "Check-out bis 10:00 Uhr.",
+    "parking": "Kein eigener Stellplatz; öffentliches Parkhaus zwei Gehminuten entfernt.",
+    "internet": "Schnelles WLAN vorhanden; kein separater Arbeitsplatz.",
+    "capacity": "Bis zu zwei Gäste mit einem Doppelbett.",
+    "accessibility": "Keine bestätigte Barrierefreiheitszusage; Zugang bitte beim Host klären.",
+    "location": "Zentral in Stuttgart-Mitte, fünf Minuten von der S-Bahn entfernt.",
+    "amenities": "Küche, schnelles WLAN und Fernseher; weitere Ausstattung beim Host bestätigen."
+  },
+  "host_confirmation": ["Early Check-in", "Late Check-out", "Preise", "Stornierung", "Haustiere", "Schäden", "Sicherheit"]
+}

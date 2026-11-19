@@ -1,0 +1,15 @@
+{
+  "property_id": "design-maisonette",
+  "property_name": "Design-Maisonette",
+  "facts": {
+    "checkin": "Check-in ab 15:00 Uhr per Self-Check-in über eine Schlüsselbox.",
+    "checkout": "Check-out bis 11:00 Uhr.",
+    "parking": "Zwei kostenlose Stellplätze im Freien.",
+    "internet": "WLAN und spezieller Arbeitsplatz vorhanden.",
+    "capacity": "Bis zu vier Gäste; Kingsize-Bett und Schlafcouch.",
+    "accessibility": "Zwei Ebenen; Schlafzimmer und Bad über eine Wendeltreppe erreichbar.",
+    "location": "Gärtringen mit guter Anbindung an Stuttgart und die Region.",
+    "amenities": "Küche, WLAN, Arbeitsplatz, Fernseher und kostenloser Parkplatz."
+  },
+  "host_confirmation": ["Early Check-in", "Late Check-out", "Preise", "Stornierung", "Haustiere", "Schäden", "Sicherheit"]
+}
