@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StayMate AI · Guest Assistant</title>
-    <link rel="stylesheet" href="styles.css?v=hard-layout-3" />
+    <link rel="stylesheet" href="styles.css?v=staymate-playful-1" />
   </head>
   <body>
     <main class="app-shell">
       <aside class="sidebar">
-        <p class="eyebrow">UNIVERSITY PROJECT · MVP</p>
+        <p class="eyebrow">DEIN AUFENTHALT</p>
         <div class="brand-lockup"><img src="assets/staymate-logo.png" alt="StayMate AI Logo" /><h1>StayMate <span>AI</span></h1></div>
-        <p class="subtitle">Guest Assistant für Ferienwohnungen</p>
+        <p class="subtitle">Dein freundlicher Reisebegleiter</p>
         <section class="property-card">
           <span class="status-dot"></span><span id="property-status">Unterkünfte aktiv</span>
           <label class="sr-only" for="property-select">Unterkunft auswählen</label>
@@ -41,44 +41,48 @@
         <div id="messages" class="messages" aria-live="polite">
           <article class="message agent">
             <div class="avatar">S</div>
-            <div class="bubble">
-              <p>Hallo! Ich bin StayMate. Ich beantworte Fragen zur Unterkunft und leite besondere Anliegen an den Gastgeber weiter.</p>
-              <small>Nur geprüfte Unterkunftsinformationen</small>
-            </div>
+            <div class="bubble"><p>Schön, dass du da bist! Ich helfe dir mit Fragen zu deiner Unterkunft. Womit kann ich deinen Aufenthalt leichter machen?</p><small>Frag einfach drauflos — ich helfe dir gern.</small></div>
           </article>
         </div>
 
-        <section class="suggestions" aria-label="Beispielfragen">
-          <button type="button">Gibt es Parkplätze?</button>
-          <button type="button">Can I work from the apartment?</button>
-          <button type="button">Kann ich früher einchecken?</button>
-          <button type="button">Gibt es eine Treppe?</button>
+        <section class="stay-progress" aria-label="Dein Aufenthalt in drei Schritten">
+          <div class="progress-heading"><div><span class="eyebrow">DEIN AUFENTHALT</span><strong id="journey-message" aria-live="polite">Womit kann ich dir helfen?</strong></div><span id="journey-count">1 von 3</span></div>
+          <div class="progress-track" role="progressbar" aria-label="Chat-Fortschritt" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" id="journey-progress"><span class="progress-fill"></span></div>
+          <div class="progress-steps"><span data-journey-step="1" class="active">Unterkunft</span><span data-journey-step="2">Frage</span><span data-journey-step="3">Antwort</span></div>
+        </section>
+
+        <section class="suggestions" aria-label="Schnellfragen">
+          <span class="suggestion-heading">Das fragen Gäste oft</span>
+          <button type="button" data-question="Gibt es WLAN und kann ich dort arbeiten?">📶 WLAN & Arbeiten</button>
+          <button type="button" data-question="Wann ist der Check-in?">🗝️ Anreise</button>
+          <button type="button" data-question="Gibt es Parkplätze?">🚗 Parken</button>
+          <button type="button" data-question="Wie viele Gäste können übernachten?">🛏️ Schlafplätze</button>
         </section>
 
         <form id="chat-form" class="composer" enctype="multipart/form-data">
           <label class="upload-button" for="image-upload" title="Foto anhängen" aria-label="Foto anhängen">＋<input id="image-upload" type="file" accept="image/jpeg,image/png,image/webp" hidden /></label>
           <label class="sr-only" for="question">Frage an StayMate</label>
           <input id="question" autocomplete="off" placeholder="Stelle eine Frage zur Unterkunft …" />
-          <button type="submit">Senden <span>↗</span></button>
+          <button id="send-button" type="submit">Senden</button>
         </form>
         <p id="image-selection" class="image-selection" aria-live="polite"></p>
         <p class="privacy-note">Demo ohne echte Gästedaten · Bilder werden zur Analyse an das konfigurierte Modell übermittelt · Host-Anfragen werden nicht versendet.</p>
       </section>
 
-      <aside class="inspector" aria-label="Host-Informationen">
-        <p class="eyebrow">TRANSPARENZ</p>
-        <h2>Agentenstatus</h2>
+      <aside class="inspector" aria-label="Informationen zur Unterkunft">
+        <p class="eyebrow">GUT ZU WISSEN</p>
+        <h2>Deine Unterkunft</h2>
         <div id="decision" class="decision safe">
           <span class="decision-icon">✓</span>
           <div><strong>Bereit</strong><p>Stelle eine Frage, um das Routing zu sehen.</p></div>
         </div>
         <section>
-          <h3>Wissensbasis</h3>
+          <h3>Hier findest du Infos</h3>
           <ul id="sources"><li>Unterkunftsprofil geladen</li></ul>
         </section>
         <section>
-          <h3>Eskalieren bei</h3>
-          <p class="tags"><span>Storno</span><span>Preis</span><span>Schaden</span><span>Sicherheit</span></p>
+          <h3>Beliebte Themen</h3>
+          <p class="tags"><span>🗝️ Anreise</span><span>📶 WLAN</span><span>🚗 Parken</span><span>🛏️ Schlafen</span></p>
         </section>
       </aside>
     </main>
@@ -102,6 +106,6 @@
         </div>
       </section>
     </div>
-    <script src="app.js?v=multi-property"></script>
+    <script src="app.js?v=staymate-playful-1"></script>
   </body>
 </html>
