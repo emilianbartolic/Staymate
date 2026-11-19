@@ -47,6 +47,7 @@ GitHub Pages can host the static files, but a page opened there cannot run a vis
 - Escalation for host-confirmation cases such as booking, price, pets, exceptions, damage, or safety.
 - Photo attachment in chat for local Codex image inspection.
 - Responsive property cards with sourced, illustrative stock photos.
+- A simple three-step guest journey, one-tap question suggestions, and friendly progress feedback.
 
 ## Agentenlogik
 
